@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Plan of Care with Clinical Validation</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #e67e22;
+            --error-color: #c0392b;
+            --bg-color: #f4f7f6;
+            --border-radius: 6px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            padding: 15px;
+            position: relative;
+        }
+
+        legend {
+            font-weight: bold;
+            color: var(--secondary-color);
+            padding: 0 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        textarea, input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; 
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .validation-msg {
+            font-size: 0.85em;
+            margin-top: 5px;
+            font-style: italic;
+            min-height: 1.2em;
+        }
+
+        .valid { color: var(--success-color); }
+        .invalid { color: var(--error-color); }
+        .warning { color: var(--warning-color); }
+
+        .checkbox-group {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .signature-block {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #gradeReport {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: var(--border-radius);
+            display: none;
+            border-left: 5px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PT Plan of Care Documentation</h1>
+    <form id="pocForm">
+        
+        <fieldset>
+            <legend>1. Communication & Coordination</legend>
+            <label for="commCoord">Enter details regarding interdisciplinary communication:</label>
+            <textarea id="commCoord" name="commCoord" placeholder="E.g., Discussed precautions with referring physician..."></textarea>
+            <div id="commMsg" class="validation-msg"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend>2. Patient Education</legend>
+            <label for="patientEd">Education provided to patient/caregiver:</label>
+            <textarea id="patientEd" name="patientEd" placeholder="E.g., Instructed on HEP, fall risk precautions..."></textarea>
+            <div id="edMsg" class="validation-msg"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend>3. Interventions planned and Tx today</legend>
+            <label for="interventions">Planned interventions and treatment performed today:</label>
+            <textarea id="interventions" name="interventions" placeholder="E.g., 97110 Therapeutic Ex (15m). Cued patient on lumbar stabilization..."></textarea>
+            <div id="cptMsg" class="validation-msg"></div>
+            <div id="skilledMsg" class="validation-msg"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend>4. Frequency & Duration</legend>
+            <div class="signature-block">
+                <div>
+                    <label for="frequency">Frequency (days per week):</label>
+                    <input type="text" id="frequency" name="frequency" placeholder="e.g., 2x/week, 3 times a week">
+                    <div id="freqMsg" class="validation-msg"></div>
+                </div>
+                <div>
+                    <label for="duration">Duration (total weeks/days):</label>
+                    <input type="text" id="duration" name="duration" placeholder="e.g., 6 weeks, 30 days">
+                    <div id="durMsg" class="validation-msg"></div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>5. Informed Consent</legend>
+            <div class="checkbox-group">
+                <input type="checkbox" id="consent" name="consent" required>
+                <label for="consent">I certify that documented informed consent was obtained from the patient prior to treatment.</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>6. Authentication</legend>
+            <div class="signature-block">
+                <div>
+                    <label for="signature">Therapist Signature/Name:</label>
+                    <input type="text" id="signature" name="signature" required placeholder="Dr. John Doe, PT, DPT">
+                </div>
+                <div>
+                    <label for="signDate">Date:</label>
+                    <input type="date" id="signDate" name="signDate" required>
+                </div>
+            </div>
+        </fieldset>
+
+        <button type="button" onclick="validateAndSubmit()">Analyze & Submit Plan of Care</button>
+    </form>
+
+    <div id="gradeReport">
+        <h3>Documentation Analysis Report</h3>
+        <div id="reportContent"></div>
+    </div>
+</div>
+
+<script>
+    // Heuristic lists for validation
+    const skilledVerbs = ["assessed", "facilitated", "guided", "cued", "corrected", "monitored", "titrated", "progressed", "modified", "instructed", "stabilized", "mobilized"];
+    
+    function validateAndSubmit() {
+        let score = 0;
+        let log = [];
+        let isValid = true;
+
+        // 1. Validate Communication
+        const commText = document.getElementById('commCoord').value.trim();
+        const commMsg = document.getElementById('commMsg');
+        if (commText.length > 10) {
+            commMsg.textContent = "✔ Communication documented.";
+            commMsg.className = "validation-msg valid";
+            score++;
+        } else {
+            commMsg.textContent = "✘ Warning: Insufficient communication detail.";
+            commMsg.className = "validation-msg warning";
+            log.push("Section 1: Details too brief.");
+            isValid = false;
+        }
+
+        // 2. Validate Education
+        const edText = document.getElementById('patientEd').value.trim();
+        const edMsg = document.getElementById('edMsg');
+        if (edText.length > 5) {
+            edMsg.textContent = "✔ Education documented.";
+            edMsg.className = "validation-msg valid";
+            score++;
+        } else {
+            edMsg.textContent = "✘ Error: Patient education missing.";
+            edMsg.className = "validation-msg invalid";
+            log.push("Section 2: Missing education documentation.");
+            isValid = false;
+        }
+
+        // 3. Validate CPT and Skilled Language
+        const txText = document.getElementById('interventions').value;
+        const cptMsg = document.getElementById('cptMsg');
+        const skilledMsg = document.getElementById('skilledMsg');
+        
+        // Regex to look for 5 digit codes (specifically 97xxx for PT common codes, or just 5 digits)
+        const cptRegex = /\b(97\d{3}|989\d{2})\b/; 
+        const hasCPT = cptRegex.test(txText);
+        
+        // Check for skilled verbs
+        const lowerTx = txText.toLowerCase();
+        const foundSkilled = skilledVerbs.filter(verb => lowerTx.includes(verb));
+
+        if (hasCPT) {
+            cptMsg.textContent = "✔ CPT Code detected.";
+            cptMsg.className = "validation-msg valid";
+            score++;
+        } else {
+            cptMsg.textContent = "✘ Error: No valid 5-digit CPT code found.";
+            cptMsg.className = "validation-msg invalid";
+            log.push("Section 3: CPT codes missing.");
+            isValid = false;
+        }
+
+        if (foundSkilled.length > 0) {
+            skilledMsg.textContent = `✔ Skilled terminology detected (${foundSkilled.slice(0,2).join(", ")}...).`;
+            skilledMsg.className = "validation-msg valid";
+            score++;
+        } else {
+            skilledMsg.textContent = "✘ Warning: Skilled verbs (e.g., 'facilitated', 'guided') not detected.";
+            skilledMsg.className = "validation-msg warning";
+            log.push("Section 3: Skilled terminology lacking.");
+        }
+
+        // 4. Validate Frequency and Duration
+        const freqText = document.getElementById('frequency').value;
+        const durText = document.getElementById('duration').value;
+        const freqMsg = document.getElementById('freqMsg');
+        const durMsg = document.getElementById('durMsg');
+
+        // Regex for "2x", "2 times", "2 days" / "week"
+        const freqRegex = /\d+\s*(x|times|days?)\/?\s*(w|wk|week)/i;
+        // Regex for "4 weeks", "30 days"
+        const durRegex = /\d+\s*(w|wks?|weeks?|d|days?)/i;
+
+        if (freqRegex.test(freqText)) {
+            freqMsg.textContent = "✔ Frequency format valid.";
+            freqMsg.className = "validation-msg valid";
+            score++;
+        } else {
+            freqMsg.textContent = "✘ Check Format: e.g., '2x/week'.";
+            freqMsg.className = "validation-msg invalid";
+            log.push("Section 4: Frequency format incorrect.");
+            isValid = false;
+        }
+
+        if (durRegex.test(durText)) {
+            durMsg.textContent = "✔ Duration format valid.";
+            durMsg.className = "validation-msg valid";
+            score++;
+        } else {
+            durMsg.textContent = "✘ Check Format: e.g., '6 weeks'.";
+            durMsg.className = "validation-msg invalid";
+            log.push("Section 4: Duration format incorrect.");
+            isValid = false;
+        }
+
+        // Generate Report
+        const reportDiv = document.getElementById('gradeReport');
+        const reportContent = document.getElementById('reportContent');
+        reportDiv.style.display = "block";
+        
+        if (isValid) {
+            reportContent.innerHTML = `<p style="color: green;"><strong>Documentation Passed Initial Checks.</strong> All mandatory components appear to be present.</p>`;
+        } else {
+            reportContent.innerHTML = `<p style="color: red;"><strong>Attention Required:</strong></p><ul>` + log.map(item => `<li>${item}</li>`).join('') + `</ul>`;
+        }
+    }
+</script>
+
+</body>
+</html>
